@@ -7,5 +7,6 @@ public enum TypeVehicule
 {
     Voiture,
     Moto,
-    TrottinetteElectrique
+    TrottinetteElectrique,
+    VeloElectrique
 }
