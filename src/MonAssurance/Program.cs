@@ -1,10 +1,18 @@
+using Microsoft.EntityFrameworkCore;
+using MonAssurance.Data;
+using MonAssurance.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddDbContext<AssuranceDbContext>(opt =>
+    opt.UseInMemoryDatabase("MonAssuranceDb"));
+
+builder.Services.AddScoped<EligibiliteService>();
+builder.Services.AddScoped<GestionRisqueService>();
+builder.Services.AddScoped<UsageVehiculeService>();
 
 var app = builder.Build();
 
