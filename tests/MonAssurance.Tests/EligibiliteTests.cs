@@ -1,7 +1,7 @@
-namespace MonAssurance.Domain.Tests;
+namespace MonAssurance.Tests;
 
-using MonAssurance.Domain.Models;
-using MonAssurance.Domain.Services;
+using MonAssurance.Models;
+using MonAssurance.Services;
 using Xunit;
 
 /// <summary>
