@@ -1,4 +1,4 @@
-namespace MonAssurance.Domain.Models;
+namespace MonAssurance.Models;
 
 /// <summary>
 /// Représente le résultat du calcul de franchise

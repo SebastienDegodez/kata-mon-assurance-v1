@@ -1,6 +1,6 @@
-namespace MonAssurance.Domain.Services;
+namespace MonAssurance.Services;
 
-using MonAssurance.Domain.Models;
+using MonAssurance.Models;
 
 /// <summary>
 /// Service de vérification de l'éligibilité d'un conducteur à la souscription d'assurance
