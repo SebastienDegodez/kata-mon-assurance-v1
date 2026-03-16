@@ -43,16 +43,30 @@ public class UsageVehiculeService
     public ResultatValidationUsage ValiderUsage(TypeVehicule typeVehicule, UsageVehicule usage)
     {
         // Les usages professionnels sont interdits pour les contrats particuliers
-        if (usage == UsageVehicule.TransportPersonnesTitreOnereux || 
-            usage == UsageVehicule.Livraison ||
-            usage == UsageVehicule.UsageProfessionnel)
+        if (usage == UsageVehicule.TransportPersonnesTitreOnereux)
         {
             return new ResultatValidationUsage(
                 false, 
                 "Usage professionnel non couvert par ce contrat"
             );
         }
-
-        return new ResultatValidationUsage(true);
+        else if (usage == UsageVehicule.Livraison)
+        {
+            return new ResultatValidationUsage(
+                false, 
+                "Usage professionnel non couvert par ce contrat"
+            );
+        }
+        else if (usage == UsageVehicule.UsageProfessionnel)
+        {
+            return new ResultatValidationUsage(
+                false, 
+                "Usage professionnel non couvert par ce contrat"
+            );
+        }
+        else
+        {
+            return new ResultatValidationUsage(true);
+        }
     }
 }
