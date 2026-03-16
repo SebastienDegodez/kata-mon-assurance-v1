@@ -50,25 +50,4 @@ public class Conducteur
     {
         return this.Sinistres; // Expose directement l'état interne
     }
-
-    /// <summary>
-    /// Ajouter un sinistre au conducteur
-    /// </summary>
-    public void AjouterSinistre(Sinistre sinistre)
-    {
-        this.Sinistres.Add(sinistre);
-    }
-
-    /// <summary>
-    /// Obtenir le nombre total de sinistres
-    /// </summary>
-    public int NombreTotalSinistres => this.Sinistres.Count;
-
-    /// <summary>
-    /// Montant total des sinistres du conducteur
-    /// </summary>
-    public decimal MontantTotalSinistres()
-    {
-        return this.Sinistres.Sum(s => s.MontantDegats);
-    }
 }
