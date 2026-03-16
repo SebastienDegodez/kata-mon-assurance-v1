@@ -13,6 +13,7 @@ builder.Services.AddDbContext<AssuranceDbContext>(opt =>
 builder.Services.AddScoped<EligibiliteService>();
 builder.Services.AddScoped<GestionRisqueService>();
 builder.Services.AddScoped<UsageVehiculeService>();
+builder.Services.AddScoped<ConducteurSinistreService>();
 
 var app = builder.Build();
 
