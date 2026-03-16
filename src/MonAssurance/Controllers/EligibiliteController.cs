@@ -4,6 +4,7 @@ using MonAssurance.Data;
 using MonAssurance.DTOs;
 using MonAssurance.Models;
 using MonAssurance.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace MonAssurance.Controllers;
 
@@ -11,8 +12,11 @@ namespace MonAssurance.Controllers;
 [Route("api/[controller]")]
 public class EligibiliteController(EligibiliteService service, AssuranceDbContext db) : ControllerBase
 {
+    public sealed record VerifierEligibiliteResponse(int Id, bool EstAcceptee, string? MotifRefus);
+
     [HttpPost]
-    public async Task<IActionResult> VerifierEligibilite([FromBody] EligibiliteRequest request)
+    [ProducesResponseType(typeof(VerifierEligibiliteResponse), StatusCodes.Status200OK)]
+    public async Task<ActionResult<VerifierEligibiliteResponse>> VerifierEligibilite([FromBody] EligibiliteRequest request)
     {
         var conducteur = new Conducteur
         {
@@ -41,7 +45,8 @@ public class EligibiliteController(EligibiliteService service, AssuranceDbContex
         db.DemandesDevis.Add(demande);
         await db.SaveChangesAsync();
 
-        return Ok(new { demande.Id, resultat.EstAcceptee, resultat.MotifRefus });
+        var response = new VerifierEligibiliteResponse(demande.Id, resultat.EstAcceptee, resultat.MotifRefus);
+        return Ok(response);
     }
 
     [HttpGet]
