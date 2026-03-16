@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using MonAssurance.DTOs;
 using MonAssurance.Models;
 using MonAssurance.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace MonAssurance.Controllers;
 
@@ -10,7 +11,8 @@ namespace MonAssurance.Controllers;
 public class UsageVehiculeController(UsageVehiculeService service) : ControllerBase
 {
     [HttpPost("coefficient")]
-    public IActionResult CalculerCoefficient([FromBody] ContratRequest request)
+    [ProducesResponseType(typeof(CoefficientResponse), StatusCodes.Status200OK)]
+    public ActionResult<CoefficientResponse> CalculerCoefficient([FromBody] ContratRequest request)
     {
         var contrat = new Contrat(request.TarifBase)
         {
@@ -21,20 +23,34 @@ public class UsageVehiculeController(UsageVehiculeService service) : ControllerB
         };
 
         var tarifAjuste = service.CalculerCoefficientGeographique(contrat);
-        return Ok(new { TarifAjuste = tarifAjuste });
+        var response = new CoefficientResponse(tarifAjuste);
+
+        return Ok(response);
     }
 
     [HttpPost("kilometrage")]
-    public IActionResult AppliquerFacteurKilometrique([FromBody] ContratRequest request)
+    [ProducesResponseType(typeof(KilometrageResponse), StatusCodes.Status200OK)]
+    public ActionResult<KilometrageResponse> AppliquerFacteurKilometrique([FromBody] ContratRequest request)
     {
         var tarifAjuste = service.AppliquerFacteurKilometrique(request.TarifBase, request.KilometrageAnnuel);
-        return Ok(new { TarifAjuste = tarifAjuste });
+        var response = new KilometrageResponse(tarifAjuste);
+
+        return Ok(response);
     }
 
     [HttpPost("valider-usage")]
-    public IActionResult ValiderUsage([FromBody] UsageValidationRequest request)
+    [ProducesResponseType(typeof(UsageValidationResponse), StatusCodes.Status200OK)]
+    public ActionResult<UsageValidationResponse> ValiderUsage([FromBody] UsageValidationRequest request)
     {
         var resultat = service.ValiderUsage(request.TypeVehicule, request.Usage);
-        return Ok(new { resultat.EstValide, resultat.Motif });
+        var response = new UsageValidationResponse(resultat.EstValide, resultat.Motif);
+
+        return Ok(response);
     }
+
+    public sealed record CoefficientResponse(decimal TarifAjuste);
+
+    public sealed record KilometrageResponse(decimal TarifAjuste);
+
+    public sealed record UsageValidationResponse(bool EstValide, string? Motif);
 }
