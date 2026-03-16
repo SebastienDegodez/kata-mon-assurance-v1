@@ -1,0 +1,44 @@
+@MonAssurance_HostAddress = http://localhost:5053
+
+### Vérifier l'éligibilité
+GET {{MonAssurance_HostAddress}}/api/eligibilite
+Accept: application/json
+
+###
+
+### Obtenir la gestion du risque
+GET {{MonAssurance_HostAddress}}/api/gestionrisque
+Accept: application/json
+
+###
+
+### Définir le coefficient d'usage du véhicule
+POST {{MonAssurance_HostAddress}}/api/usagevehicule/coefficient
+Content-Type: application/json
+Accept: application/json
+
+{
+  "coefficient": 1.0
+}
+
+###
+
+### Enregistrer le kilométrage du véhicule
+POST {{MonAssurance_HostAddress}}/api/usagevehicule/kilometrage
+Content-Type: application/json
+Accept: application/json
+
+{
+  "kilometrageAnnuel": 12000
+}
+
+###
+
+### Valider l'usage du véhicule
+POST {{MonAssurance_HostAddress}}/api/usagevehicule/valider-usage
+Content-Type: application/json
+Accept: application/json
+
+{
+  "validation": true
+}

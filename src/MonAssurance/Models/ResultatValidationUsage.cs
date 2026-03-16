@@ -1,4 +1,4 @@
-namespace MonAssurance.Domain.Models;
+namespace MonAssurance.Models;
 
 /// <summary>
 /// Résultat de validation d'usage véhicule

@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\MonAssurance.Domain\MonAssurance.Domain.csproj" />
+    <ProjectReference Include="..\..\src\MonAssurance\MonAssurance.csproj" />
   </ItemGroup>
 
 </Project>

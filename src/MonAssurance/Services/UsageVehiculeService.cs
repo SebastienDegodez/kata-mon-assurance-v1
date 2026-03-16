@@ -1,6 +1,6 @@
-namespace MonAssurance.Domain.Services;
+namespace MonAssurance.Services;
 
-using MonAssurance.Domain.Models;
+using MonAssurance.Models;
 
 /// <summary>
 /// Service de gestion de l'usage du véhicule et du stationnement

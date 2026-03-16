@@ -1,4 +1,4 @@
-namespace MonAssurance.Domain.Models;
+namespace MonAssurance.Models;
 
 /// <summary>
 /// Représente un conducteur souhaitant souscrire à une assurance
