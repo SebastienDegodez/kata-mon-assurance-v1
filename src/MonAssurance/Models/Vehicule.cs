@@ -1,15 +1,7 @@
 namespace MonAssurance.Models;
 
 /// <summary>
-/// Représente un véhicule à assurer - Version ANTI-CALISTHENICS
-/// Cette classe viole volontairement les principes Object Calisthenics pour montrer les mauvaises pratiques.
-/// 
-/// Violations :
-/// - Règle 2 : 9 propriétés au lieu d'une par classe
-/// - Règle 3 : Trop de paramètres au constructeur (9)
-/// - Règle 5 : Appels imbriqués (this.CalculerPrimeBase() * this.CalculerCoeff())
-/// - Règle 7 : Getters/setters publics sur tout
-/// - Règle 8 : Logique métier mixée dans la classe
+/// Représente un véhicule à assurer
 /// </summary>
 public class Vehicule
 {
@@ -38,10 +30,8 @@ public class Vehicule
         Immatriculation = immatriculation;
     }
 
-    // Violation Règle 8 : Logique métier mixée directement dans la classe
     public decimal CalculerPrimeTotale()
     {
-        // Violation Règle 5 : Appels imbriqués (nested calls)
         return this.CalculerPrimeBase() * this.CalculerCoefficientUsure() * (1 + this.NombreSinistres * 0.15m);
     }
 

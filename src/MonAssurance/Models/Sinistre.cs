@@ -1,8 +1,7 @@
 namespace MonAssurance.Models;
 
 /// <summary>
-/// Représente un sinistre avec détails.
-/// Données mutables directement modifiables (violation Règle 7 des calisthenics).
+/// Représente un sinistre avec détails
 /// </summary>
 public class Sinistre
 {

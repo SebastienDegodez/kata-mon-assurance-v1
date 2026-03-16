@@ -1,13 +1,7 @@
 namespace MonAssurance.Models;
 
 /// <summary>
-/// Représente un contrat d'assurance - Version ANTI-CALISTHENICS
-/// 
-/// Violations :
-/// - Règle 2 : 5 propriétés au lieu d'une par classe
-/// - Règle 3 : Constructeur à responsabilités mixées
-/// - Règle 7 : Getters/setters publics sur tout
-/// - Règle 8 : Validation et règles métier directement dans la classe
+/// Représente un contrat d'assurance
 /// </summary>
 public class Contrat
 {
@@ -25,8 +19,7 @@ public class Contrat
     }
 
     /// <summary>
-    /// Valide le contrat selon plusieurs critères disparates
-    /// Violation Règle 8 : Logique métier mixée dans la classe
+    /// Valide le contrat selon plusieurs critères
     /// </summary>
     public bool ValiderContrat(int ageDriver)
     {
@@ -44,8 +37,7 @@ public class Contrat
     }
 
     /// <summary>
-    /// Calcule des réductions multiples sans séparation concern
-    /// Violation Règle 5 et 8
+    /// Calcule des réductions cumulées
     /// </summary>
     public decimal CalculerReductionCumulee(Vehicule vehicule, Conducteur conducteur)
     {

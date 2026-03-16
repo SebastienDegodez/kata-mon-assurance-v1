@@ -1,8 +1,7 @@
 namespace MonAssurance.Models;
 
 /// <summary>
-/// Représente le résultat du calcul de franchise - Version ANTI-CALISTHENICS
-/// Violation Règle 7 : Getters/setters publics
+/// Représente le résultat du calcul de franchise
 /// </summary>
 public class ResultatFranchise
 {

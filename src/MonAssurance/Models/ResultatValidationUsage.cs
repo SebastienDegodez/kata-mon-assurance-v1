@@ -1,8 +1,7 @@
 namespace MonAssurance.Models;
 
 /// <summary>
-/// Résultat de validation d'usage véhicule - Version ANTI-CALISTHENICS
-/// Violation Règle 7 : Getters/setters publics
+/// Résultat de validation d'usage véhicule
 /// </summary>
 public class ResultatValidationUsage
 {

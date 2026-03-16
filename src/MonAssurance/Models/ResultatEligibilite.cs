@@ -1,8 +1,7 @@
 namespace MonAssurance.Models;
 
 /// <summary>
-/// Représente le résultat d'une vérification d'éligibilité - Version ANTI-CALISTHENICS
-/// Violation Règle 7 : Getters/setters publics
+/// Représente le résultat d'une vérification d'éligibilité
 /// </summary>
 public class ResultatEligibilite
 {

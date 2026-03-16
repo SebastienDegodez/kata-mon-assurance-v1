@@ -1,13 +1,7 @@
 namespace MonAssurance.Models;
 
 /// <summary>
-/// Représente un conducteur souhaitant souscrire à une assurance - Version ANTI-CALISTHENICS
-/// 
-/// Violations :
-/// - Règle 2 : 4 propriétés au lieu d'une par classe (incluant sinistres)
-/// - Règle 4 : Collection List<Sinistre> exposée directement sans wrapper
-/// - Règle 7 : Getters/setters publics sur tout
-/// - Règle 8 : Logique métier (CalculerAge, CalculerCoefficientBonus) mixée dans la classe
+/// Représente un conducteur souhaitant souscrire à une assurance
 /// </summary>
 public class Conducteur
 {
@@ -19,13 +13,10 @@ public class Conducteur
     /// </summary>
     public decimal CoefficientBonusMalus { get; set; } = 1.00m;
 
-    // VIOLATION RÈGLE 4 : Collection directement exposée sans encapsulation
-    // N'importe qui peut ajouter/supprimer/modifier les sinistres du conducteur
     public List<Sinistre> Sinistres { get; set; } = new();
 
     /// <summary>
     /// Calcule l'âge du conducteur à une date donnée
-    /// Violation Règle 8 : Logique métier mixée dans la classe
     /// </summary>
     public int CalculerAge(DateTime dateReference)
     {
@@ -39,7 +30,6 @@ public class Conducteur
 
     /// <summary>
     /// Calcul du coefficient bonus/malus basé sur ancienneté
-    /// Violation Règle 8 : Logique métier mixée directement dans la classe
     /// </summary>
     public decimal CalculerCoefficientBonus()
     {
@@ -55,7 +45,6 @@ public class Conducteur
 
     /// <summary>
     /// Consultation des sinistres du conducteur
-    /// Violation Règle 4 : retourne la référence directe à la liste
     /// </summary>
     public List<Sinistre> ConsulterSinistres()
     {
