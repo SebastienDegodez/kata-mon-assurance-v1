@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using MonAssurance.DTOs;
 using MonAssurance.Models;
 using MonAssurance.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace MonAssurance.Controllers;
 
@@ -9,8 +10,11 @@ namespace MonAssurance.Controllers;
 [Route("api/[controller]")]
 public class GestionRisqueController(GestionRisqueService service) : ControllerBase
 {
+    public record FranchiseResponseDto(decimal Montant, string Details);
+
     [HttpPost("franchise")]
-    public IActionResult CalculerFranchise([FromBody] FranchiseRequest request)
+    [ProducesResponseType(typeof(FranchiseResponseDto), StatusCodes.Status200OK)]
+    public ActionResult<FranchiseResponseDto> CalculerFranchise([FromBody] FranchiseRequest request)
     {
         var conducteur = new Conducteur
         {
@@ -23,6 +27,8 @@ public class GestionRisqueController(GestionRisqueService service) : ControllerB
 
         var resultat = service.CalculerFranchise(conducteur, vehicule);
 
-        return Ok(new { resultat.Montant, resultat.Details });
+        var response = new FranchiseResponseDto(resultat.Montant, resultat.Details);
+
+        return Ok(response);
     }
 }
