@@ -4,7 +4,6 @@ using MonAssurance.Data;
 using MonAssurance.DTOs;
 using MonAssurance.Models;
 using MonAssurance.Services;
-using Microsoft.AspNetCore.Http;
 
 namespace MonAssurance.Controllers;
 
@@ -12,7 +11,7 @@ namespace MonAssurance.Controllers;
 [Route("api/[controller]")]
 public class EligibiliteController(EligibiliteService service, AssuranceDbContext db) : ControllerBase
 {
-    public sealed record VerifierEligibiliteResponse(int Id, bool EstAcceptee, string? MotifRefus);
+    public sealed record VerifierEligibiliteResponse(Guid Id, bool EstAcceptee, string? MotifRefus);
 
     [HttpPost]
     [ProducesResponseType(typeof(VerifierEligibiliteResponse), StatusCodes.Status200OK)]
