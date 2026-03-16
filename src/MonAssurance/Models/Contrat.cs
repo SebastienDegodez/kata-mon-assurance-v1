@@ -25,15 +25,21 @@ public class Contrat
     {
         // Critères mélangés sans séparation des responsabilités
         if (ageDriver < 18)
+        {
             return false;
-
-        if (this.KilometrageAnnuel > 50000 && this.TypeStationnement == TypeStationnement.Rue)
+        }
+        else if (this.KilometrageAnnuel > 50000 && this.TypeStationnement == TypeStationnement.Rue)
+        {
             return false;
-
-        if (this.Usage == UsageVehicule.Livraison && this.TypeVehicule == TypeVehicule.Voiture)
+        }
+        else if (this.Usage == UsageVehicule.Livraison && this.TypeVehicule == TypeVehicule.Voiture)
+        {
             return false;
-
-        return true;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     /// <summary>
