@@ -3,295 +3,245 @@ namespace MonAssurance.Tests;
 using MonAssurance.Models;
 using MonAssurance.Services;
 using Xunit;
-using Xbehave;
 
 /// <summary>
-/// Tests BDD pour la gestion des sinistres avec xBehave
-/// Démontre la capacité du projet à utiliser une syntaxe BDD fluente
-/// Corresponds à: features/06_gestion_sinistres.feature
+/// Tests BDD - Approche minimaliste et pérenne
 /// 
-/// Généré un rapport HTML lisible pour démonstration en CI/CD
+/// ✅ Zéro dépendance excessive (juste xUnit)
+/// ✅ Syntaxe claire avec commentaires Given/When/Then
+/// ✅ Attributs [Trait] pour tracer chaque test vers son scénario BDD
+/// ✅ Pas à la merci d'un framework qui devient obsolète
+/// ✅ Lisible et maintenable à long terme
+/// 
+/// Correspond à: features/06_gestion_sinistres.feature
 /// </summary>
 public class SinistreTestsBDD
 {
-    [Scenario]
-    public void AjouterSinistreAuConducteur()
+    private readonly ConducteurSinistreService _service;
+
+    public SinistreTestsBDD()
     {
-        var service = new ConducteurSinistreService();
-        Conducteur conducteur = null;
-        Sinistre sinistre = null;
-        decimal montantTotal = 0;
-
-        "Given un conducteur nommé Jean Dupont"
-            .x(() =>
-            {
-                conducteur = new Conducteur
-                {
-                    DateNaissance = DateTime.Now.AddYears(-35),
-                    AnneesPermis = 10,
-                    CoefficientBonusMalus = 1.0m
-                };
-            });
-
-        "And le conducteur n'a pas de sinistre"
-            .x(() => Assert.Empty(conducteur.Sinistres));
-
-        "When j'ajoute un sinistre d'un montant de 5000 €"
-            .x(() =>
-            {
-                sinistre = new Sinistre
-                {
-                    MontantDegats = 5000m,
-                    DateSinistre = DateTime.Now
-                };
-                service.AjouterSinistre(conducteur, sinistre);
-            });
-
-        "Then le conducteur a maintenant 1 sinistre"
-            .x(() => Assert.Single(conducteur.Sinistres));
-
-        "And le montant total des sinistres est de 5000 €"
-            .x(() =>
-            {
-                montantTotal = service.CalculerMontantTotalSinistres(conducteur);
-                Assert.Equal(5000m, montantTotal);
-            });
+        _service = new ConducteurSinistreService();
     }
 
-    [Scenario]
-    public void AccumulationDePlusieurssSinistres()
+    // ===== Scénario 1: Ajout d'un sinistre =====
+    [Fact]
+    [Trait("Feature", "06_gestion_sinistres")]
+    [Trait("Scenario", "Ajout d'un sinistre à un conducteur")]
+    public void Scenario_Ajout_sinistre_a_conducteur()
     {
-        var service = new ConducteurSinistreService();
-        Conducteur conducteur = null;
-        decimal montantTotal = 0;
+        // Given: un conducteur nommé Jean Dupont
+        var conducteur = new Conducteur
+        {
+            DateNaissance = DateTime.Now.AddYears(-35),
+            AnneesPermis = 10,
+            CoefficientBonusMalus = 1.0m
+        };
 
-        "Given un conducteur nommé Marie Martin"
-            .x(() =>
-            {
-                conducteur = new Conducteur
-                {
-                    DateNaissance = DateTime.Now.AddYears(-40),
-                    AnneesPermis = 15,
-                    CoefficientBonusMalus = 1.0m
-                };
-            });
+        // And: le conducteur n'a pas de sinistre
+        Assert.Empty(conducteur.Sinistres);
 
-        "And le conducteur a 2 sinistres précédents pour 3000 € et 2000 €"
-            .x(() =>
-            {
-                var sinistre1 = new Sinistre { MontantDegats = 3000m, DateSinistre = DateTime.Now.AddDays(-100) };
-                var sinistre2 = new Sinistre { MontantDegats = 2000m, DateSinistre = DateTime.Now.AddDays(-200) };
-                service.AjouterSinistre(conducteur, sinistre1);
-                service.AjouterSinistre(conducteur, sinistre2);
-            });
+        // When: j'ajoute un sinistre d'un montant de 5000€
+        var sinistre = new Sinistre
+        {
+            MontantDegats = 5000m,
+            DateSinistre = DateTime.Now
+        };
+        _service.AjouterSinistre(conducteur, sinistre);
 
-        "When j'ajoute un sinistre d'un montant de 4000 €"
-            .x(() =>
-            {
-                var sinistre3 = new Sinistre { MontantDegats = 4000m, DateSinistre = DateTime.Now };
-                service.AjouterSinistre(conducteur, sinistre3);
-            });
+        // Then: le conducteur a maintenant 1 sinistre
+        Assert.Single(conducteur.Sinistres);
 
-        "Then le conducteur a maintenant 3 sinistres"
-            .x(() => Assert.Equal(3, service.ObtenirNombreSinistres(conducteur)));
-
-        "And le montant total des sinistres est de 9000 €"
-            .x(() =>
-            {
-                montantTotal = service.CalculerMontantTotalSinistres(conducteur);
-                Assert.Equal(9000m, montantTotal);
-            });
+        // And: le montant total des sinistres est de 5000€
+        var montantTotal = _service.CalculerMontantTotalSinistres(conducteur);
+        Assert.Equal(5000m, montantTotal);
     }
 
-    [Scenario]
-    public void SurchargeForSinistreRecent()
+    // ===== Scénario 2: Accumulation de plusieurs sinistres =====
+    [Fact]
+    [Trait("Feature", "06_gestion_sinistres")]
+    [Trait("Scenario", "Accumulation de plusieurs sinistres")]
+    public void Scenario_Accumulation_plusieurs_sinistres()
     {
-        var service = new ConducteurSinistreService();
-        Conducteur conducteur = null;
-        bool estSinistreRecent = false;
-        decimal coeffSurprime = 0;
+        // Given: un conducteur nommé Marie Martin
+        var conducteur = new Conducteur
+        {
+            DateNaissance = DateTime.Now.AddYears(-40),
+            AnneesPermis = 15,
+            CoefficientBonusMalus = 1.0m
+        };
 
-        "Given un conducteur nommé Pierre Lefevre"
-            .x(() =>
-            {
-                conducteur = new Conducteur
-                {
-                    DateNaissance = DateTime.Now.AddYears(-30),
-                    AnneesPermis = 5,
-                    CoefficientBonusMalus = 1.0m
-                };
-            });
+        // And: le conducteur a 2 sinistres précédents pour 3000€ et 2000€
+        var sinistre1 = new Sinistre { MontantDegats = 3000m, DateSinistre = DateTime.Now.AddDays(-100) };
+        var sinistre2 = new Sinistre { MontantDegats = 2000m, DateSinistre = DateTime.Now.AddDays(-200) };
+        _service.AjouterSinistre(conducteur, sinistre1);
+        _service.AjouterSinistre(conducteur, sinistre2);
 
-        "And le conducteur a un sinistre depuis 200 jours"
-            .x(() =>
-            {
-                var sinistre = new Sinistre
-                {
-                    MontantDegats = 6000m,
-                    DateSinistre = DateTime.Now.AddDays(-200)
-                };
-                service.AjouterSinistre(conducteur, sinistre);
-            });
+        // When: j'ajoute un sinistre d'un montant de 4000€
+        var sinistre3 = new Sinistre { MontantDegats = 4000m, DateSinistre = DateTime.Now };
+        _service.AjouterSinistre(conducteur, sinistre3);
 
-        "When je vérifie les sinistres récents sur 365 jours"
-            .x(() => estSinistreRecent = service.EstSinistreRecemment(conducteur, 365));
+        // Then: le conducteur a maintenant 3 sinistres
+        Assert.Equal(3, _service.ObtenirNombreSinistres(conducteur));
 
-        "Then le conducteur a un sinistre récent"
-            .x(() => Assert.True(estSinistreRecent));
-
-        "And une surcharge de 25% est appliquée"
-            .x(() =>
-            {
-                coeffSurprime = service.CalculerCoefficientSurprimeSinistres(conducteur);
-                Assert.True(coeffSurprime > 1.0m);
-            });
+        // And: le montant total des sinistres est de 9000€
+        var montantTotal = _service.CalculerMontantTotalSinistres(conducteur);
+        Assert.Equal(9000m, montantTotal);
     }
 
-    [Scenario]
-    public void PasDeSurchargeForSinistreAncien()
+    // ===== Scénario 3: Surcharge pour sinistre récent =====
+    [Fact]
+    [Trait("Feature", "06_gestion_sinistres")]
+    [Trait("Scenario", "Surcharge pour sinistre récent")]
+    public void Scenario_Surcharge_sinistre_recent()
     {
-        var service = new ConducteurSinistreService();
-        Conducteur conducteur = null;
-        bool estSinistreRecent = false;
+        // Given: un conducteur nommé Pierre Lefevre
+        var conducteur = new Conducteur
+        {
+            DateNaissance = DateTime.Now.AddYears(-30),
+            AnneesPermis = 5,
+            CoefficientBonusMalus = 1.0m
+        };
 
-        "Given un conducteur nommé Sophie Bernard"
-            .x(() =>
-            {
-                conducteur = new Conducteur
-                {
-                    DateNaissance = DateTime.Now.AddYears(-35),
-                    AnneesPermis = 8,
-                    CoefficientBonusMalus = 1.0m
-                };
-            });
+        // And: le conducteur a un sinistre depuis 200 jours
+        var sinistre = new Sinistre
+        {
+            MontantDegats = 6000m,
+            DateSinistre = DateTime.Now.AddDays(-200)
+        };
+        _service.AjouterSinistre(conducteur, sinistre);
 
-        "And le conducteur a un sinistre depuis 500 jours"
-            .x(() =>
-            {
-                var sinistre = new Sinistre
-                {
-                    MontantDegats = 5000m,
-                    DateSinistre = DateTime.Now.AddDays(-500)
-                };
-                service.AjouterSinistre(conducteur, sinistre);
-            });
+        // When: je vérifie les sinistres récents sur 365 jours
+        var estSinistreRecent = _service.EstSinistreRecemment(conducteur, 365);
 
-        "When je vérifie les sinistres récents sur 365 jours"
-            .x(() => estSinistreRecent = service.EstSinistreRecemment(conducteur, 365));
+        // Then: le conducteur a un sinistre récent
+        Assert.True(estSinistreRecent);
 
-        "Then le conducteur n'a pas de sinistre récent"
-            .x(() => Assert.False(estSinistreRecent));
-
-        "And aucune surcharge n'est appliquée"
-            .x(() =>
-            {
-                var coeffSurprime = service.CalculerCoefficientSurprimeSinistres(conducteur);
-                // Le sinistre est ancien mais toujours compté : 1.05 (non responsable)
-                Assert.Equal(1.05m, coeffSurprime);
-            });
+        // And: une surcharge est appliquée
+        var coeffSurprime = _service.CalculerCoefficientSurprimeSinistres(conducteur);
+        Assert.True(coeffSurprime > 1.0m);
     }
 
-    [Scenario]
-    public void CoefficientDeSurprimeSelonNombreDeSinistres()
+    // ===== Scénario 4: Pas de surcharge pour sinistre ancien =====
+    [Fact]
+    [Trait("Feature", "06_gestion_sinistres")]
+    [Trait("Scenario", "Pas de surcharge pour sinistre ancien")]
+    public void Scenario_Pas_surcharge_sinistre_ancien()
     {
-        var service = new ConducteurSinistreService();
-        Conducteur conducteur = null;
-        decimal coeffSurprime = 0;
+        // Given: un conducteur nommé Sophie Bernard
+        var conducteur = new Conducteur
+        {
+            DateNaissance = DateTime.Now.AddYears(-35),
+            AnneesPermis = 8,
+            CoefficientBonusMalus = 1.0m
+        };
 
-        "Given un conducteur nommé Luc Rousseau"
-            .x(() =>
-            {
-                conducteur = new Conducteur
-                {
-                    DateNaissance = DateTime.Now.AddYears(-45),
-                    AnneesPermis = 20,
-                    CoefficientBonusMalus = 1.0m
-                };
-            });
+        // And: le conducteur a un sinistre depuis 500 jours
+        var sinistre = new Sinistre
+        {
+            MontantDegats = 5000m,
+            DateSinistre = DateTime.Now.AddDays(-500)
+        };
+        _service.AjouterSinistre(conducteur, sinistre);
 
-        "And le conducteur a 4 sinistres"
-            .x(() =>
-            {
-                for (int i = 1; i <= 4; i++)
-                {
-                    var sinistre = new Sinistre
-                    {
-                        MontantDegats = 2000m * i,
-                        DateSinistre = DateTime.Now.AddDays(-100 * i)
-                    };
-                    service.AjouterSinistre(conducteur, sinistre);
-                }
-            });
+        // When: je vérifie les sinistres récents sur 365 jours
+        var estSinistreRecent = _service.EstSinistreRecemment(conducteur, 365);
 
-        "When je calcule le coefficient de surprime"
-            .x(() => coeffSurprime = service.CalculerCoefficientSurprimeSinistres(conducteur));
+        // Then: le conducteur n'a pas de sinistre récent
+        Assert.False(estSinistreRecent);
 
-        "Then le coefficient doit être positif et reflète les multiplicateurs appliqués"
-            .x(() =>
-            {
-                Assert.True(coeffSurprime > 1.0m, "Le coefficient doit être supérieur à 1.0");
-                Assert.True(coeffSurprime < 2.0m, "Le coefficient doit être raisonnablement limité");
-            });
+        // And: la surcharge reflète juste le sinistre (pas récent donc pas supplémentaire)
+        var coeffSurprime = _service.CalculerCoefficientSurprimeSinistres(conducteur);
+        Assert.Equal(1.05m, coeffSurprime);
     }
 
-    [Scenario]
-    public void SuppressionDesSinistresDePlusDe2Ans()
+    // ===== Scénario 5: Coefficient de surprime selon nombre de sinistres =====
+    [Fact]
+    [Trait("Feature", "06_gestion_sinistres")]
+    [Trait("Scenario", "Coefficient de surprime selon le nombre de sinistres")]
+    public void Scenario_Coefficient_surprime_nombre_sinistres()
     {
-        var service = new ConducteurSinistreService();
-        Conducteur conducteur = null;
-        Sinistre sinistre1 = null;
-        Sinistre sinistre2 = null;
-        Sinistre sinistre3 = null;
+        // Given: un conducteur nommé Luc Rousseau
+        var conducteur = new Conducteur
+        {
+            DateNaissance = DateTime.Now.AddYears(-45),
+            AnneesPermis = 20,
+            CoefficientBonusMalus = 1.0m
+        };
 
-        "Given un conducteur nommé Anne Dubois"
-            .x(() =>
+        // And: le conducteur a 4 sinistres
+        for (int i = 1; i <= 4; i++)
+        {
+            var sinistre = new Sinistre
             {
-                conducteur = new Conducteur
-                {
-                    DateNaissance = DateTime.Now.AddYears(-38),
-                    AnneesPermis = 12,
-                    CoefficientBonusMalus = 1.0m
-                };
-            });
+                MontantDegats = 2000m * i,
+                DateSinistre = DateTime.Now.AddDays(-100 * i)
+            };
+            _service.AjouterSinistre(conducteur, sinistre);
+        }
 
-        "And le conducteur a 3 sinistres: 1 récent (6 mois), 2 anciens (2.5 et 3 ans)"
-            .x(() =>
-            {
-                sinistre1 = new Sinistre
-                {
-                    MontantDegats = 3000m,
-                    DateSinistre = DateTime.Now.AddMonths(-6)
-                };
-                sinistre2 = new Sinistre
-                {
-                    MontantDegats = 2500m,
-                    DateSinistre = DateTime.Now.AddYears(-2).AddMonths(-6)
-                };
-                sinistre3 = new Sinistre
-                {
-                    MontantDegats = 4000m,
-                    DateSinistre = DateTime.Now.AddYears(-3)
-                };
+        // When: je calcule le coefficient de surprime
+        var coeffSurprime = _service.CalculerCoefficientSurprimeSinistres(conducteur);
 
-                service.AjouterSinistre(conducteur, sinistre1);
-                service.AjouterSinistre(conducteur, sinistre2);
-                service.AjouterSinistre(conducteur, sinistre3);
-            });
+        // Then: le coefficient doit être positif et reflète les multiplicateurs appliqués
+        // 4 sinistres: 2000, 4000, 6000, 8000
+        // - 2000: 1.05 (non responsable)
+        // - 4000: 1.05 (non responsable)
+        // - 6000: 1.05 * 1.10 (montant > 5000)
+        // - 8000: 1.05 * 1.10 (montant > 5000)
+        // Total: 1.05 * 1.05 * 1.155 * 1.155 ≈ 1.47
+        Assert.True(coeffSurprime > 1.0m, "Le coefficient doit être supérieur à 1.0");
+        Assert.True(coeffSurprime < 2.0m, "Le coefficient doit être raisonnablement limité");
+    }
 
-        "When je supprime les sinistres de plus de 2 ans"
-            .x(() => service.SupprimerSinistresAnciens(conducteur, 2));
+    // ===== Scénario 6: Suppression des sinistres de plus de 2 ans =====
+    [Fact]
+    [Trait("Feature", "06_gestion_sinistres")]
+    [Trait("Scenario", "Suppression des sinistres de plus de 2 ans")]
+    public void Scenario_Suppression_sinistres_plus_2_ans()
+    {
+        // Given: un conducteur nommé Anne Dubois
+        var conducteur = new Conducteur
+        {
+            DateNaissance = DateTime.Now.AddYears(-38),
+            AnneesPermis = 12,
+            CoefficientBonusMalus = 1.0m
+        };
 
-        "Then le conducteur a maintenant 1 sinistre (le récent)"
-            .x(() => Assert.Equal(1, service.ObtenirNombreSinistres(conducteur)));
+        // And: le conducteur a 3 sinistres: 1 récent (6 mois), 2 anciens (2.5 et 3 ans)
+        var sinistre1 = new Sinistre
+        {
+            MontantDegats = 3000m,
+            DateSinistre = DateTime.Now.AddMonths(-6)  // Récent: 6 mois
+        };
+        var sinistre2 = new Sinistre
+        {
+            MontantDegats = 2500m,
+            DateSinistre = DateTime.Now.AddYears(-2).AddMonths(-6)  // Ancien: 2.5 ans
+        };
+        var sinistre3 = new Sinistre
+        {
+            MontantDegats = 4000m,
+            DateSinistre = DateTime.Now.AddYears(-3)  // Ancien: 3 ans
+        };
 
-        "And le sinistre restant est celui de 6 mois"
-            .x(() =>
-            {
-                var sinistresRestants = conducteur.Sinistres.ToList();
-                Assert.Single(sinistresRestants);
-                Assert.Contains(sinistre1, sinistresRestants);
-                Assert.DoesNotContain(sinistre2, sinistresRestants);
-                Assert.DoesNotContain(sinistre3, sinistresRestants);
-            });
+        _service.AjouterSinistre(conducteur, sinistre1);
+        _service.AjouterSinistre(conducteur, sinistre2);
+        _service.AjouterSinistre(conducteur, sinistre3);
+
+        // When: je supprime les sinistres de plus de 2 ans
+        _service.SupprimerSinistresAnciens(conducteur, 2);
+
+        // Then: le conducteur a maintenant 1 sinistre (le récent)
+        Assert.Equal(1, _service.ObtenirNombreSinistres(conducteur));
+
+        // And: le sinistre restant est celui de 6 mois
+        var sinistresRestants = conducteur.Sinistres.ToList();
+        Assert.Single(sinistresRestants);
+        Assert.Contains(sinistre1, sinistresRestants);
+        Assert.DoesNotContain(sinistre2, sinistresRestants);
+        Assert.DoesNotContain(sinistre3, sinistresRestants);
     }
 }
+
+
