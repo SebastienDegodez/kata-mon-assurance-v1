@@ -1,6 +1,17 @@
 @MonAssurance_HostAddress = http://localhost:5053
 
-GET {{MonAssurance_HostAddress}}/weatherforecast/
+### Vérifier l'éligibilité
+GET {{MonAssurance_HostAddress}}/api/eligibilite
 Accept: application/json
 
 ###
+
+### Obtenir la gestion du risque
+GET {{MonAssurance_HostAddress}}/api/gestionrisque
+Accept: application/json
+
+###
+
+### Obtenir l'usage du véhicule
+GET {{MonAssurance_HostAddress}}/api/usagevehicule
+Accept: application/json
