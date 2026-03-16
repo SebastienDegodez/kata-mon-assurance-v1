@@ -24,5 +24,29 @@ jobs:
     - name: Build
       run: dotnet build --no-restore --configuration Release
     
-    - name: Run tests
-      run: dotnet test --no-build --verbosity normal --configuration Release
+    - name: Run tests with xBehave report
+      run: dotnet test --no-build --verbosity normal --configuration Release --logger "trx;LogFileName=test-results.trx"
+    
+    - name: Generate xBehave HTML Report
+      if: always()
+      run: |
+        mkdir -p bdd-report
+        dotnet test tests/MonAssurance.Tests/MonAssurance.Tests.csproj --no-build --configuration Release --verbosity normal --logger "console;verbosity=detailed" 2>&1 | tee bdd-report/test-output.txt
+    
+    - name: Upload test results artifact
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: |
+          test-results.trx
+          bdd-report/
+        retention-days: 30
+    
+    - name: Publish test report as GitHub Pages
+      if: always() && github.event_name == 'push' && github.ref == 'refs/heads/master'
+      uses: actions/upload-artifact@v4
+      with:
+        name: bdd-report-pages
+        path: bdd-report/
+        retention-days: 90
